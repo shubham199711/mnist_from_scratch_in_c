@@ -5,10 +5,10 @@
 #include "../util/img.h"
 
 typedef struct {
-    int input,
-    int hidden,
-    int output,
-    double learning_rate,
+    int input;
+    int hidden;
+    int output;
+    double learning_rate;
     Matrix* hidden_weights;
     Matrix* output_weights;
 } NeuralNetwork;

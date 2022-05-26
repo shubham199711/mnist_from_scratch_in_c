@@ -25,6 +25,8 @@ NeuralNetwork* network_create(int input, int hidden, int output, double lr){
 }
 
 
+// need to add a funtion here to train_network
+
 
 
 
@@ -34,14 +36,14 @@ void network_train_batch_imgs(NeuralNetwork* net, Img** imgs, int batch_size){
         Img* cur_img = imgs[i];
         Matrix* img_data = matrix_flatten(cur_img->img_data, 0);
         Matrix* output = matrix_create(10, 1);
-        output->enties[cur_img->label][0] = 1;
-        network_train(net, img_data, ouput);
+        output->entries[cur_img->label][0] = 1;
+        network_train(net, img_data, output);
         matrix_free(output);
         matrix_free(img_data);
     }
 }
 
-Matrix* network_predict_img(NeuralNetwork*, Img* img){
+Matrix* network_predict_img(NeuralNetwork* net, Img* img){
     Matrix* img_data = matrix_flatten(img->img_data, 0);
     Matrix* res = network_predict(net, img_data);
     matrix_free(img_data);
@@ -50,7 +52,7 @@ Matrix* network_predict_img(NeuralNetwork*, Img* img){
 
 double network_predict_imgs(NeuralNetwork* net, Img** imgs, int n){
     int n_correct = 0;
-    for (int i=0; i<n: i++){
+    for (int i=0; i<n; i++){
         Matrix* prediction = network_predict_img(net, imgs[i]);
         if (matrix_argmax(prediction) == imgs[i]->label){
             n_correct++;
@@ -78,9 +80,9 @@ void network_save(NeuralNetwork* net, char* file_string)[
     fprintf(descriptor, "%d\n", net->hidden);
     fprintf(descriptor, "%d\n", net->output);
     fclose(descriptor);
-    matrix_save(net->hidden_weights, "hidden");
-    matrix_save(net->ouput_weights, "ouput");
-    printf("Successfully loaded network from '%s'\n", file_string);
+    matrix_save(net->hidden_weights,"hidden");
+    matrix_save(net->output_weights, "output");
+    printf("Successfully loaded network from \'%s\'\n", file_string);
     chdir("-");
 ]
 
@@ -97,7 +99,7 @@ NeuralNetwork* network_load(char* file_string){
     fclose(descriptor);
     net->hidden_weights = matrix_load("hidden");
     net->output_weights = matrix_load("output");
-    printf("Successfully loaded network from '%s'\n", file_string);
+    printf("Successfully loaded network from \'%s\'\n", file_string);
     chdir("-");
     return net;
 }

@@ -7,7 +7,7 @@ int check_dimension(Matrix* m1,Matrix* m2){
     return 0;
 }
 
-Matrix* mutiply(Matrix* m1,Matrix* m2){
+Matrix* multiply(Matrix* m1, Matrix* m2){
     if(check_dimension(m1,m2)){
         Matrix* m = matrix_create(m1->rows,m2->cols);
         for (int i = 0; i< m1->rows; i++){
