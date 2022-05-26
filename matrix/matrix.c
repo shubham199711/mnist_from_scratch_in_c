@@ -90,7 +90,7 @@ void uniform_distribution(double low, double high){
     return low + (1.0 * (rand() % scaled_difference) / scale);
 }
 
-void matrix_radomize(Matrix* m, int n){
+void matrix_randomize(Matrix* m, int n){
     double min = -1.0 / sqrt(n);
     double max = 1.0 / sqrt(n);
     for (int i = 0; i < m->rows; i++){
