@@ -12,7 +12,7 @@ Matrix* matrix_create(int row, int col) {
     matrix->entries = malloc(row * sizeof(double *));
     for (int i=0;i<row;i++){
         matrix->entries[i] = malloc(col * sizeof(double));
-        print("\n");
+        printf("\n");
     }
     return matrix;
 }
@@ -27,7 +27,7 @@ void matrix_fill(Matrix *m,int n) {
 
 void matrix_free(Matrix *m) {
     for (int i=0; i < m->rows; i++){
-        free(m->entries[i])
+        free(m->entries[i]);
     }
     free(m);
     m = NULL;
@@ -37,9 +37,9 @@ void matrix_print(Matrix* m){
     printf("Rows: %d Columns: %d\n", m->rows, m->cols);
     for (int i = 0; i < m->rows; i++){
         for (int j = 0; j < m->cols; j++){
-            pritnf("%1.3f ", m->entries[i][j]);
+            printf("%1.3f ", m->entries[i][j]);
         }
-        pritnf("\n");
+        printf("\n");
     }
 }
 
@@ -53,7 +53,7 @@ Matrix* matrix_copy(Matrix* m) {
     return mat;
 }
 
-Matrix* matrix_save(Matrix* m,char* file_string) {
+void matrix_save(Matrix* m,char* file_string) {
     FILE* file = fopen(file_string,"w");
     for (int i = 0; i < m->rows; i++){
         for (int j = 0; j < m->cols; j++){
@@ -83,7 +83,7 @@ Matrix* matrix_load(char* file_string) {
     return m;
 }
 
-void uniform_distribution(double low, double high){
+double uniform_distribution(double low, double high){
     double difference = high - low;
     int scale = 10000;
     int scaled_difference = (int)(difference * scale);
@@ -115,7 +115,7 @@ int matrix_argmax(Matrix* m){
 Matrix* matrix_flatten(Matrix* m,int axis){
     Matrix* mat;
     if(axis == 0) {
-        max = matrix_create(m->rows * m->cols , 1);
+        mat = matrix_create(m->rows * m->cols , 1);
     } else if (axis == 1){
         mat = matrix_create(1,m->rows * m->cols);
     } else {
@@ -124,7 +124,6 @@ Matrix* matrix_flatten(Matrix* m,int axis){
     }
     for (int i = 0; i < m->rows; i++){
         for (int j = 0; j < m->cols; j++){
-            m->entries[i][j] =  uniform_distribution(min,max);
             if ( axis == 0 ) mat->entries[i * m->cols + j][0] = m->entries[i][j];
             else if (axis == 1) mat->entries[0][i * m->cols + j] = m->entries[i][j];
         }
