@@ -27,6 +27,83 @@ NeuralNetwork* network_create(int input, int hidden, int output, double lr){
 
 // need to add a funtion here to train_network
 
+void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
+	// Feed forward
+	Matrix* hidden_inputs	= dot(net->hidden_weights, input);
+	Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
+	Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
+	Matrix* final_outputs = apply(sigmoid, final_inputs);
+
+	// Find errors
+	Matrix* output_errors = subtract(output, final_outputs);
+	Matrix* hidden_errors = dot(transpose(net->output_weights), output_errors);
+
+	// Backpropogate
+	// output_weights = add(
+	//		 output_weights, 
+	//     scale(
+	// 			  net->lr, 
+	//			  dot(
+	// 		 			multiply(
+	// 						output_errors, 
+	//				  	sigmoidPrime(final_outputs)
+	//					), 
+	//					transpose(hidden_outputs)
+	// 				)
+	//		 )
+	// )
+	Matrix* sigmoid_primed_mat = sigmoidPrime(final_outputs);
+	Matrix* multiplied_mat = multiply(output_errors, sigmoid_primed_mat);
+	Matrix* transposed_mat = transpose(hidden_outputs);
+	Matrix* dot_mat = dot(multiplied_mat, transposed_mat);
+	Matrix* scaled_mat = scale(net->learning_rate, dot_mat);
+	Matrix* added_mat = add(net->output_weights, scaled_mat);
+	matrix_free(net->output_weights); // Free the old weights before replacing
+	net->output_weights = added_mat;
+
+	matrix_free(sigmoid_primed_mat);
+	matrix_free(multiplied_mat);
+	matrix_free(transposed_mat);
+	matrix_free(dot_mat);
+	matrix_free(scaled_mat);
+
+	// hidden_weights = add(
+	// 	 net->hidden_weights,
+	// 	 scale (
+	//			net->learning_rate
+	//    	dot (
+	//				multiply(
+	//					hidden_errors,
+	//					sigmoidPrime(hidden_outputs)	
+	//				)
+	//				transpose(inputs)
+	//      )
+	// 	 )
+	// )
+	// Reusing variables after freeing memory
+	sigmoid_primed_mat = sigmoidPrime(hidden_outputs);
+	multiplied_mat = multiply(hidden_errors, sigmoid_primed_mat);
+	transposed_mat = transpose(input);
+	dot_mat = dot(multiplied_mat, transposed_mat);
+	scaled_mat = scale(net->learning_rate, dot_mat);
+	added_mat = add(net->hidden_weights, scaled_mat);
+	matrix_free(net->hidden_weights); // Free the old hidden_weights before replacement
+	net->hidden_weights = added_mat; 
+
+	matrix_free(sigmoid_primed_mat);
+	matrix_free(multiplied_mat);
+	matrix_free(transposed_mat);
+	matrix_free(dot_mat);
+	matrix_free(scaled_mat);
+
+	// Free matrices
+	matrix_free(hidden_inputs);
+	matrix_free(hidden_outputs);
+	matrix_free(final_inputs);
+	matrix_free(final_outputs);
+	matrix_free(output_errors);
+	matrix_free(hidden_errors);
+}
 
 
 
