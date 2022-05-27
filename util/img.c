@@ -11,7 +11,7 @@ Img** csv_to_imgs(char* file_string, int number_of_imgs){
     FILE *fp;
     Img** imgs = malloc(number_of_imgs * sizeof(Img*));
     char row[MAXCHAR];
-    fp = fopen(file_string, "r")
+    fp = fopen(file_string, "r");
 
     // Read the first line
     fgets(row,MAXCHAR,fp);
@@ -20,7 +20,7 @@ Img** csv_to_imgs(char* file_string, int number_of_imgs){
         imgs[i] = malloc(sizeof(Img));
 
         int j = 0;
-        fgets(row,MAXCHAR,file);
+        fgets(row, MAXCHAR, fp);
         char* token = strtok(row, ",");
         imgs[i]->img_data = matrix_create(28,28);
         while(token != NULL) {
@@ -52,6 +52,6 @@ void img_free(Img* img){
 
 void imgs_free(Img** imgs, int n){
     for (int i=0;i<n;i++){
-        imgs_free(imgs[i]);
+        img_free(imgs[i]);
     }
 }

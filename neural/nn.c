@@ -72,7 +72,7 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data){
 }
 
 
-void network_save(NeuralNetwork* net, char* file_string)[
+void network_save(NeuralNetwork* net, char* file_string){
     mkdir(file_string, 0777);
     chdir(file_string);
     FILE* descriptor = fopen("descriptor", "w");
@@ -84,12 +84,12 @@ void network_save(NeuralNetwork* net, char* file_string)[
     matrix_save(net->output_weights, "output");
     printf("Successfully loaded network from \'%s\'\n", file_string);
     chdir("-");
-]
+}
 
 NeuralNetwork* network_load(char* file_string){
     NeuralNetwork* net = malloc(sizeof(NeuralNetwork));
     char entry[MAXCHAR];
-    chdir(file_string):
+    chdir(file_string);
 
     FILE* descriptor = fopen("descriptor", "r");
     fgets(entry, MAXCHAR, descriptor);
@@ -105,11 +105,11 @@ NeuralNetwork* network_load(char* file_string){
 }
 
 void network_print(NeuralNetwork* net){
-    printf("# of Inputs: %d\n", net->inputs);
+    printf("# of Inputs: %d\n", net->input);
     printf("# of Hidden: %d\n", net->hidden);
     printf("# of Output: %d\n", net->output);
     printf("Hidden Weights: \n");
-    matrix_print(nex->hidden_weights);
+    matrix_print(net->hidden_weights);
     printf("Output weights: \n");
     matrix_print(net->output_weights);
 }
